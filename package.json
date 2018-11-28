@@ -2,8 +2,8 @@
   "name": "aoc-2018-cljs",
   "version": "0.0.0",
   "scripts": {
-    "build:watch": "shadow-cljs watch script",
-    "build": "shadow-cljs release script"
+    "build:watch": "shadow-cljs watch connect",
+    "build": "shadow-cljs release connect"
   },
   "license": "MIT",
   "devDependencies": {
