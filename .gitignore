@@ -1,0 +1,10 @@
+.cpcache/
+.idea/
+.shadow-cljs/
+node_modules/
+target/
+*.iml
+*.swp
+.nrepl-port
+yarn-error.log
+

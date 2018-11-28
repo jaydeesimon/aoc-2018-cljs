@@ -1,0 +1,4 @@
+{:deps {:aliases [:dev :test]}
+ :builds {:script {:target    :node-script
+                   :main      aoc-2018-cljs.core/-main
+                   :output-to "lib/script.js"}}}
