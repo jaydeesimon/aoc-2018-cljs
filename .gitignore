@@ -7,4 +7,4 @@ target/
 *.swp
 .nrepl-port
 yarn-error.log
-
+bin/
