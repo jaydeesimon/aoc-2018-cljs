@@ -1,7 +1,8 @@
 (ns aoc-2018-cljs.day02
   (:require [aoc-2018-cljs.util :refer [slurp-resource line-seq-resource]]))
 
-(def input (line-seq-resource "day02.txt"))
+
+(def ids (line-seq-resource "day02.txt"))
 
 
 (defn repeating-letters? [n s]
@@ -29,19 +30,25 @@
        (remove nil?)))
 
 
+(defn index-by-difference [ids]
+  (let [pairs (into #{} (for [i ids
+                              j ids
+                              :when (not= i j)]
+                          (set [i j])))]
+    (group-by (fn [pair]
+                (difference (first pair) (second pair)))
+              pairs)))
+
+
 (comment
 
   ;; Part 1
-  (checksum input)
+  (checksum ids)
 
   ;; Part 2
-  ;; Sorting (ascending) just happened to work for me because my inputs differed
-  ;; near the end of the string which put the two most similar strings next to each
-  ;; other after a sort.
-  (->> (sort input)
-       (partition 2 1)
-       (filter (fn [[s1 s2]]
-                 (= 1 (difference s1 s2))))
-       (first)
-       (apply common-letters)
-       (apply str)))
+  (as-> (index-by-difference ids) ?
+        (get ? 1)
+        (first ?)
+        (vec ?)
+        (apply common-letters ?)
+        (apply str ?)))
