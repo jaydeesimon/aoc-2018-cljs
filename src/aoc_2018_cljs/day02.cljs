@@ -27,7 +27,8 @@
               (when (= c1 c2)
                 c1))
             s1 s2)
-       (remove nil?)))
+       (remove nil?)
+       (apply str)))
 
 
 (defn index-by-difference [ids]
@@ -50,5 +51,4 @@
         (get ? 1)
         (first ?)
         (vec ?)
-        (apply common-letters ?)
-        (apply str ?)))
+        (apply common-letters ?)))
