@@ -35,6 +35,9 @@
   (checksum input)
 
   ;; Part 2
+  ;; Sorting (ascending) just happened to work for me because my inputs differed
+  ;; near the end of the string which put the two most similar strings next to each
+  ;; other after a sort.
   (->> (sort input)
        (partition 2 1)
        (filter (fn [[s1 s2]]
