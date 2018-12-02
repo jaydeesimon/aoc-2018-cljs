@@ -48,7 +48,7 @@
 
   ;; Part 2
   (as-> (index-by-difference ids) ?
-        (get ? 1)
+        (get ? 1) ;; get the pairs that are off-by-one
         (first ?)
         (vec ?)
         (apply common-letters ?)))
