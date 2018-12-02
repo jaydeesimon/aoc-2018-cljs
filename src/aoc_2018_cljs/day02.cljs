@@ -31,14 +31,22 @@
        (apply str)))
 
 
+;; not the most efficient way to create pairs
+;; of each element of xs to every other element
+;; but fast enough for our input
+(defn pairs [xs]
+  (->> (for [i xs
+             j xs
+             :when (not= i j)]
+         (set [i j]))
+       (into #{})
+       (map vec)))
+
+
 (defn index-by-difference [ids]
-  (let [pairs (into #{} (for [i ids
-                              j ids
-                              :when (not= i j)]
-                          (set [i j])))]
-    (group-by (fn [pair]
-                (difference (first pair) (second pair)))
-              pairs)))
+  (group-by (fn [[id1 id2]]
+              (difference id1 id2))
+            (pairs ids)))
 
 
 (comment
@@ -50,5 +58,4 @@
   (as-> (index-by-difference ids) ?
         (get ? 1) ;; get the pairs that are off-by-one
         (first ?)
-        (vec ?)
         (apply common-letters ?)))
