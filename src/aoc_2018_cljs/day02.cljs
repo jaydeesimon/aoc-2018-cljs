@@ -23,9 +23,9 @@
 
 (defn common-letters [s1 s2]
   (->> (map (fn [c1 c2]
-           (when (= c1 c2)
-             c1))
-         s1 s2)
+              (when (= c1 c2)
+                c1))
+            s1 s2)
        (remove nil?)))
 
 
