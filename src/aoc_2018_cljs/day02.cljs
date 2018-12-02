@@ -5,7 +5,9 @@
 (def ids (line-seq-resource "day02.txt"))
 
 
-(defn repeating-letters? [n s]
+(defn repeating-letters?
+  "True if s has n repeating letters, false otherwise."
+  [n s]
   (contains? (set (vals (frequencies s))) n))
 
 
