@@ -21,6 +21,11 @@
      :description description}))
 
 
+;; After parsing the lines, not every line identifies
+;; the guard associated with the event. This function
+;; makes sure every event has an associated guard.
+;; The events must be sorted by the timestamp
+;; for it to work correctly.
 (defn fill-in-guard [events]
   (let [initial-guard (get (first events) :guard)
         current-guard (atom initial-guard)]
@@ -31,13 +36,13 @@
          events)))
 
 
-(defn normalize [filename]
+(defn normalize-events [filename]
   (->> (line-seq-resource filename)
        (map parse-line)
        (sort-by (juxt :month :day :hour :minute))
        fill-in-guard))
 
-
+  
 (defn asleep-diffs [events]
   (->> (partition 2 1 events)
        (filter (fn [[{state1 :state} {state2 :state}]]
@@ -77,7 +82,7 @@
 
 
 (defn compress-asleep-diffs [filename]
-  (->> (normalize filename)
+  (->> (normalize-events filename)
        asleep-diffs
        compress*))
 
