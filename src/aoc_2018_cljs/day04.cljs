@@ -52,6 +52,7 @@
                :start-minute minute1
                :end-minute   minute2}))))
 
+
 ;; Takes the intervals that the guards are asleep
 ;; and aggregates the minute duration and the hour-minutes
 (defn aggregate* [asleep-deltas]
