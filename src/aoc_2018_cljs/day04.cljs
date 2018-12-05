@@ -42,7 +42,7 @@
        (sort-by (juxt :month :day :hour :minute))
        fill-in-guard))
 
-  
+
 (defn asleep-diffs [events]
   (->> (partition 2 1 events)
        (filter (fn [[{state1 :state} {state2 :state}]]
