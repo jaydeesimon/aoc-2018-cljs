@@ -43,7 +43,7 @@
        fill-in-guard))
 
 
-(defn asleep-diffs [events]
+(defn asleep-deltas [events]
   (->> (partition 2 1 events)
        (filter (fn [[{state1 :state} {state2 :state}]]
                  (and (= state1 :asleep) (= state2 :awake))))
@@ -52,8 +52,9 @@
                :start-minute minute1
                :end-minute   minute2}))))
 
-
-(defn compress* [diffs]
+;; Takes the intervals that the guards are asleep
+;; and aggregates the minute duration and the hour-minutes
+(defn aggregate* [asleep-deltas]
   (reduce (fn [asleep-map {:keys [guard start-minute end-minute]}]
             (update
               asleep-map
@@ -67,44 +68,44 @@
                     {:duration            (+ duration cur-duration)
                      :hour-minutes-asleep (concat cur-hour-minutes-asleep hour-minutes-asleep)})))))
           {}
-          diffs))
+          asleep-deltas))
 
 
-(defn find-guard-with-max-sleep [compressed-asleep-diffs]
-  (first (apply max-key (comp :duration second) compressed-asleep-diffs)))
+(defn find-guard-with-max-sleep [aggregate-asleep-deltas]
+  (first (apply max-key (comp :duration second) aggregate-asleep-deltas)))
 
 
-(defn find-day-most-asleep [compressed-asleep-diffs guard]
-  (->> (get-in compressed-asleep-diffs [guard :hour-minutes-asleep])
+(defn find-day-most-asleep [aggregate-asleep-deltas guard]
+  (->> (get-in aggregate-asleep-deltas [guard :hour-minutes-asleep])
        frequencies
        (apply max-key val)
        first))
 
 
-(defn compress-asleep-diffs [filename]
+(defn aggregate-asleep-deltas [filename]
   (->> (normalize-events filename)
-       asleep-diffs
-       compress*))
+       asleep-deltas
+       aggregate*))
 
 
 (defn part-one [filename]
-  (let [compressed-asleep-diffs (compress-asleep-diffs filename)
-        guard (find-guard-with-max-sleep compressed-asleep-diffs)
-        day-most-asleep (find-day-most-asleep compressed-asleep-diffs guard)]
+  (let [aggregate-asleep-deltas (aggregate-asleep-deltas filename)
+        guard (find-guard-with-max-sleep aggregate-asleep-deltas)
+        day-most-asleep (find-day-most-asleep aggregate-asleep-deltas guard)]
     {:guard  guard
      :answer (* (js/parseInt guard) day-most-asleep)}))
 
 
-(defn find-guard-with-most-frequent-asleep-minute [compressed-asleep-diffs]
-  (->> compressed-asleep-diffs
+(defn find-guard-with-most-frequent-asleep-minute [aggregate-asleep-deltas]
+  (->> aggregate-asleep-deltas
        (map (fn [[guard {:keys [hour-minutes-asleep]}]]
               {:guard guard :max (apply max-key val (frequencies hour-minutes-asleep))}))
        (apply max-key (comp second :max))))
 
 
 (defn part-two [filename]
-  (let [compressed-asleep-diffs (compress-asleep-diffs filename)
-        {guard :guard [minute _] :max} (find-guard-with-most-frequent-asleep-minute compressed-asleep-diffs)]
+  (let [aggregate-asleep-deltas (aggregate-asleep-deltas filename)
+        {guard :guard [minute _] :max} (find-guard-with-most-frequent-asleep-minute aggregate-asleep-deltas)]
     {:guard guard :answer (* (js/parseInt guard) minute)}))
 
 
