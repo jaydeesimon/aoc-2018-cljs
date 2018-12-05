@@ -71,6 +71,12 @@
           asleep-deltas))
 
 
+(defn aggregate-asleep-deltas [filename]
+  (->> (normalize-events filename)
+       asleep-deltas
+       aggregate*))
+
+
 (defn find-guard-with-max-sleep [aggregate-asleep-deltas]
   (first (apply max-key (comp :duration second) aggregate-asleep-deltas)))
 
@@ -80,12 +86,6 @@
        frequencies
        (apply max-key val)
        first))
-
-
-(defn aggregate-asleep-deltas [filename]
-  (->> (normalize-events filename)
-       asleep-deltas
-       aggregate*))
 
 
 (defn part-one [filename]
