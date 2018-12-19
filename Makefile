@@ -2,4 +2,4 @@ watch:
 	yarn build:watch
 
 connect:
-	node bin/connect.js
+	node --stack_size=1000000 bin/connect.js
