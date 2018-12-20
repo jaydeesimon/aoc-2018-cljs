@@ -6,23 +6,28 @@
 (def input (map #(js/parseInt %) (str/split (slurp-resource "day08.txt") #" ")))
 
 
-(defn collect-metadata* [metadata [qc qm & more]]
+(defn make-node [level metadata]
+  {:level    level
+   :metadata metadata})
+
+
+(defn collect-nodes* [level nodes [qc qm & more]]
   (if (zero? qc)
-    [(into metadata (take qm more))
+    [(conj nodes (make-node level (take qm more)))
      (drop qm more)]
-    (let [[metadata more] (reduce (fn [[metadata' more'] _]
-                                    (collect-metadata* metadata' more'))
-                                  [metadata more]
-                                  (range qc))]
-      [(into metadata (take qm more))
+    (let [[nodes more] (reduce (fn [[nodes' more'] _]
+                                 (collect-nodes* (inc level) nodes' more'))
+                               [nodes more]
+                               (range qc))]
+      [(conj nodes (make-node level (take qm more)))
        (drop qm more)])))
 
 
-(defn collect-metadata [ints]
-  (first (collect-metadata* [] ints)))
+(defn collect-nodes [ints]
+  (first (collect-nodes* 0 [] ints)))
 
 
 (comment
 
   ;; Part 1
-  (reduce + (collect-metadata input)))
+  (reduce + (mapcat :metadata (collect-nodes input))))
