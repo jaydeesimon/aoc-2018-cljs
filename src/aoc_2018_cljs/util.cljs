@@ -34,3 +34,7 @@
 
 (defn line-seq-resource [resource]
   (line-seq (resourcize resource)))
+
+
+(defn parse-int [s]
+  (js/parseInt s))
